@@ -5,6 +5,7 @@ import math
 import time
 import random
 import pdb
+import pprint
 
 
 class Item(object):
@@ -21,13 +22,15 @@ class Item(object):
         self.importance =importanceQ
         self.truck = 0
 
+    def __repr__(self):    
+        return(f"name:{self.name}, size:{self.size}, importance:{self.importance}")
 class ItemList(object):
     
     lst=[]; # the actual list of items 
 
     def __init__(self):
         self.lst= [None] * 30
-        
+    
     def setItems(self):
         self.lst[0]=Item("Bandages","",6,1);
         self.lst[1]=Item("BandagesXL","",6,1);
@@ -64,5 +67,7 @@ if __name__ == "__main__":
     x = ItemList()
     x.setItems()
     x.lst.sort(key=lambda y:y.size, reverse=True)
+    for i in x.lst:
+        print(i.size)
     pdb.set_trace()
 

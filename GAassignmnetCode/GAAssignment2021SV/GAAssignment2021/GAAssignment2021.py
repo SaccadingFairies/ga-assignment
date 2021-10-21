@@ -9,7 +9,7 @@ import time
 import random
 
 import Items
-import Genome
+import genetics
 import g
 
 text_box1=0
@@ -62,14 +62,14 @@ def initialise():
     g.POPULATION = int(text_boxR2.get("1.0", tk.END))
     g.MUTATIONPERCENT = float(text_boxR4.get("1.0", tk.END))
     g.maxGeneration = int(text_boxR3.get("1.0", tk.END));  
-     
+    
     g.generation = 0
-    g.mutations = 0
+    g.mutations= 0
     
 
     items = Items.ItemList()
     items.setItems()
-    p = Genome.Population(globalRand)
+    p = genetics.Population(globalRand, items)
     g.best = p.calcScore(items)
     showStats()
     showBest()
@@ -85,7 +85,7 @@ def run1Generation(p):
     global globalRand
     gg = int(g.POPULATION / 2)
     for i in range(0,gg):
-        p.breed(globalRand);
+        p.breed()
     g.best = p.calcScore(items);
     g.generation = g.generation +1
    

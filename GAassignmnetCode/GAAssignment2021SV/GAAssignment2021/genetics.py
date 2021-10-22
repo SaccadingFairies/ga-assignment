@@ -48,7 +48,6 @@ class Genome(object):
         new_list.setItems()
         new_list = copy(new_list.lst)
         new_genes = [Gene(random.randint(0, 3), i) for i in new_list] 
-        print(new_genes[0])
         return(cls(rng, new_genes))
 
 
@@ -102,8 +101,6 @@ class Population:
         self.item_list = item_list
         self.pop = list(map(lambda x:x.random_genes(item_list), self.pop))
 
-        pdb.set_trace()
-
     def idOfBest(self): # highest score
         #global POPULATION
         #retv = 0;
@@ -133,21 +130,19 @@ class Population:
          # update        g.best
          # update        g.bestScore 
     def intercourse(self, genome1, genome2): 
-        baby = Genome(self.rng)
+        baby = Genome(self.rng) 
+        baby.genes = [0] * 30
         for i in range(30):
             coin = rndInt(self.rng, 0, 1)
             if coin == 0:
-                inherited = genome1.genes[i]
-            else:
-                inherited = genome2.genes[i]
+                baby.genes[i] = genome1.genes[i]
+            elif coin == 1:
+                baby.genes[i] = genome2.genes[i]
             does_mutation_happen = rndInt(self.rng, 1, 100) 
             if does_mutation_happen <= g.MUTATIONPERCENT:
-                coin = rndInt(self.rng, 0, 1)
-                if coin == 0:
-                    inherited.truck = rndInt(self.rng, 0, 3)
-                elif coin == 0:
-                    inherited.item = self.item_list[rndInt(self.rng, 0, 29)]
-            baby.genes.append(inherited)
+                print('bang!')
+                baby.genes[i].truck = rndInt(self.rng, 0, 3)
+            # TO DO: change generation and mutations
         return(baby)
 
 
@@ -155,6 +150,7 @@ class Population:
     def breed(self):
         # Kill some breed from the rest 
         score = sorted(self.pop, key=lambda genome: genome.score)
+        test = copy(self.pop)
         best_50 = score[len(score)//2:]
         parents1 = best_50[:len(best_50)//2]
         parents2 = best_50[len(best_50)//2:]
@@ -162,7 +158,16 @@ class Population:
         for i in range(4):
             random.shuffle(parents1)
             random.shuffle(parents2)
-            new_pop += [self.intercourse(parents1[i], parents2[i]) for i in range(25)] 
+
+            # test = [self.intercourse(parents1[i], parents2[i]) for i in range(25)] 
+            for i in range(25):
+                x = self.intercourse(parents1[i], parents2[i])
+                print(f"genome1{parents1[i].genes[0]}")
+                print(f"genome1{parents2[i].genes[0]}")
+                print(f"x:{x.genes[0]}")
+                print("----------------")
+
+                new_pop.append(x)
         self.pop = new_pop 
 
 
@@ -172,7 +177,5 @@ if __name__ == "__main__":
     item_list.setItems()
     test  = Population(rng, item_list)
     test.calcScore(rng)
-    pdb.set_trace()
-    # x.breed()
-    for i in test.pop:
-        print(i.genes[0])
+    test.breed()
+    pdb.test()

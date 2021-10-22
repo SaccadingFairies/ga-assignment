@@ -10,8 +10,10 @@ from Items import Item, ItemList
 import g
 from dataclasses import dataclass
 import random
+import sys
+import time
 
-random.seed(119)
+
 def rnd (rng, lo, hi):  
     #if rng is a random the it returns a float between lo and hi , but never equalling Hi
     retv = (hi - lo) * rng.random() + lo;
@@ -31,19 +33,25 @@ class Gene(object):
 class Genome(object):
     # some genome data deletd here .. students to design
     
-    def __init__(self,rng):
+    def __init__(self,rng, genes=[]):
         #note it populates the new genome with random numbers
         self.score=0       # score of this genome 
         self.generation=0  # counter to know which generation this came from
         self.mutations=0   # counter to know how many mutations were in this genome
-        self.genes = []
+        self.genes = genes
+    def __repr__(self):
+        return(f"score:{self.score}, generation:{self.generation}, mutations:{self.mutations}")
 
-                        
-    def random_genes(self, rng):
+    @classmethod                
+    def random_genes(cls, rng):
         new_list = ItemList()
         new_list.setItems()
         new_list = copy(new_list.lst)
-        self.genes = [Gene(rndInt(rng, 0, 3), i) for i in new_list] 
+        new_genes = [Gene(random.randint(0, 3), i) for i in new_list] 
+        print(new_genes[0])
+        return(cls(rng, new_genes))
+
+
 
     def getTruck(self, truck):
         truck_genes = list(filter(lambda x: x.truck==truck, self.genes))
@@ -92,8 +100,9 @@ class Population:
         self.pop = [Genome(rng)]* g.POPULATION
         self.rng = rng
         self.item_list = item_list
-        for genome in self.pop:
-            genome.random_genes(self.rng)
+        self.pop = list(map(lambda x:x.random_genes(item_list), self.pop))
+
+        pdb.set_trace()
 
     def idOfBest(self): # highest score
         #global POPULATION
@@ -145,13 +154,12 @@ class Population:
     
     def breed(self):
         # Kill some breed from the rest 
-        pdb.set_trace()
         score = sorted(self.pop, key=lambda genome: genome.score)
         best_50 = score[len(score)//2:]
         parents1 = best_50[:len(best_50)//2]
         parents2 = best_50[len(best_50)//2:]
         new_pop = []
-        for i in range(2):
+        for i in range(4):
             random.shuffle(parents1)
             random.shuffle(parents2)
             new_pop += [self.intercourse(parents1[i], parents2[i]) for i in range(25)] 
@@ -159,9 +167,12 @@ class Population:
 
 
 if __name__ == "__main__":
-    rng = random.Random(119)
+    rng = random.Random()
     item_list = ItemList()
     item_list.setItems()
-    x = Population(rng, item_list)
-    x.calcScore(rng)
-    x.breed()
+    test  = Population(rng, item_list)
+    test.calcScore(rng)
+    pdb.set_trace()
+    # x.breed()
+    for i in test.pop:
+        print(i.genes[0])

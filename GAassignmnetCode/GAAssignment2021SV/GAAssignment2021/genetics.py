@@ -118,11 +118,13 @@ class Population:
         best_id = 0
         for count, genome in enumerate(self.pop):
             score = genome.calcScore(itemList)
-            if score > best_score:
+            if score > best_score or count == 0:
                 best_score = score
                 best_id = count
         g.bestScore = best_score
         g.best = best_id
+        print(best_score)
+        return(best_id)
 
 
 
@@ -140,9 +142,10 @@ class Population:
                 baby.genes[i] = genome2.genes[i]
             does_mutation_happen = rndInt(self.rng, 1, 100) 
             if does_mutation_happen <= g.MUTATIONPERCENT:
-                print('bang!')
                 baby.genes[i].truck = rndInt(self.rng, 0, 3)
+                baby.mutations += 1
             # TO DO: change generation and mutations
+        baby.generation += 1
         return(baby)
 
 
@@ -162,11 +165,6 @@ class Population:
             # test = [self.intercourse(parents1[i], parents2[i]) for i in range(25)] 
             for i in range(25):
                 x = self.intercourse(parents1[i], parents2[i])
-                print(f"genome1{parents1[i].genes[0]}")
-                print(f"genome1{parents2[i].genes[0]}")
-                print(f"x:{x.genes[0]}")
-                print("----------------")
-
                 new_pop.append(x)
         self.pop = new_pop 
 

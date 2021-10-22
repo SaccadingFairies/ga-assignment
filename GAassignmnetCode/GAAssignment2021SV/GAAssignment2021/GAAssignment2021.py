@@ -11,6 +11,7 @@ import random
 import Items
 import genetics
 import g
+import pdb
 
 text_box1=0
 text_box2=0
@@ -92,6 +93,7 @@ def run1Generation(p):
 
 def runAll():
     global p, delayBox, window, Checkbutton1
+    pdb.set_trace()
     while (g.generation < g.maxGeneration):
         run1Generation(p);
         showStats();
@@ -125,15 +127,34 @@ def showBest():
     s1 = 0;
     s2 = 0;
     s3 = 0;
+    best = p.pop[g.best]
 
     #// students put your code in here ******************************     
     #//                                call addToTruck to update the display 
+    truck0 = best.getTruck(1)
+    truck1 = best.getTruck(1)
+    truck2 = best.getTruck(2)
+    truck3 = best.getTruck(3)
+    t0 = ""
+    for gene in truck0:
+        item = gene.item
+        t0 += f"{item.name} ({item.size},{item.importance})\n"
 
-            
-    t0 = "Item 1a\nItem2" + str(s0);
-    t1 = "Item 1b\nItem2" + str(s1);
-    t2 = "Item 1c\nItem2" + "Sum  =" + str(s2);
-    t3 = "Item 1d\nItem2" + "Sum  =" + str(s3);
+
+    t1 = ""
+    for gene in truck1:
+        item = gene.item
+        t1 += f"{item.name} ({item.size},{item.importance})\n"
+
+    t2 = ""
+    for gene in truck2:
+        item = gene.item
+        t2 += f"{item.name} ({item.size},{item.importance})\n"
+
+    t3 = ""
+    for gene in truck3:
+        item = gene.item
+        t3 += f"{item.name} ({item.size},{item.importance})\n"
 
     txt="Score="  + str(g.bestScore) + " ("+str(g.best)+")"
     greeting5.configure(text = txt);

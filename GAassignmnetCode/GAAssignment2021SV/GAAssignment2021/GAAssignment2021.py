@@ -93,7 +93,6 @@ def run1Generation(p):
 
 def runAll():
     global p, delayBox, window, Checkbutton1
-    pdb.set_trace()
     while (g.generation < g.maxGeneration):
         run1Generation(p);
         showStats();
@@ -101,10 +100,11 @@ def runAll():
         window.update_idletasks()
         delaySecs=float(delayBox.get("1.0", tk.END))
         if (delaySecs >= 0.01): time.sleep(delaySecs)
-        time.sleep(0.9)
+        # time.sleep(0.9)
 
 def run1Gen():
     global p
+    pdb.set_trace()
     run1Generation(p);
     showStats();
     showBest();
@@ -142,20 +142,29 @@ def showBest():
 
 
     t1 = ""
+    size1 = 0
     for gene in truck1:
         item = gene.item
+        size1 += item.size 
         t1 += f"{item.name} ({item.size},{item.importance})\n"
+    t1 += f"Sum = {size1}"
 
     t2 = ""
+    size2 = 0
     for gene in truck2:
         item = gene.item
+        size2 += item.size
         t2 += f"{item.name} ({item.size},{item.importance})\n"
+    t2 += f"Sum = {size2}"
 
     t3 = ""
+    size3 = 0
     for gene in truck3:
         item = gene.item
+        size3 += item.size
         t3 += f"{item.name} ({item.size},{item.importance})\n"
-
+    t3 += f"Sum = {size3}"
+    #TO DO: add sum to trucks
     txt="Score="  + str(g.bestScore) + " ("+str(g.best)+")"
     greeting5.configure(text = txt);
 

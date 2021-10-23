@@ -7,7 +7,7 @@ NUM_OF_ITEMS = 30
 TRUCK_CAPACITY = 19
 
 POPULATION = 100;
-MUTATIONPERCENT=3 
+MUTATIONPERCENT=3
 
 generation=0;  # Current generation
 maxGeneration =20;

@@ -97,28 +97,32 @@ class Genome(object):
             size1 += gene.item.size
         
         diff_from_ideal1 = 19 - size1
-        if diff_from_ideal1 < 0:
-            diff_from_ideal1 -= 100
+        # if diff_from_ideal1 < 0:
+        #     diff_from_ideal1 -= 100
 
         for gene in truck2:
             importance += importance_scores[gene.item.importance]
             size2 += gene.item.size
         diff_from_ideal2 = 19 - size2
-        if diff_from_ideal2 < 0:
-            diff_from_ideal2 -= 100
+        # if diff_from_ideal2 < 0:
+        #     diff_from_ideal2 -= 100
 
         for gene in truck3:
             importance += importance_scores[gene.item.importance]
             size3 += gene.item.size
         diff_from_ideal3 = 19 - size3
-        if diff_from_ideal2 < 0:
-            diff_from_ideal2 -= 100
+        # if diff_from_ideal2 < 0:
+        #     diff_from_ideal2 -= 100
 
 
 
 
         total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
+        # print(f"diff1:{diff_from_ideal1}, diff2:{diff_from_ideal2}, diff3:{diff_from_ideal3}")
         score = total_diff
+        if score == 0:
+            pdb.set_trace()
+        print(score)
         self.score = score
         return(self.score)
 
@@ -150,18 +154,15 @@ class Population:
         
 
     def calcScore(self, itemList):
-        best_score = 0 
-        best_id = 0
-
         for count, genome in enumerate(self.pop):
             genome.calcScore(itemList)
 
         best = min(self.pop)
         best_id = min(range(len(self.pop)), key=self.pop.__getitem__)
 
-        g.bestScore = best_score
+        g.bestScore = best.score
         g.best = best_id
-        print(f"best id:{best_id}, best_score:{best_score}")
+        print(f"best id:{best_id}, best_score:{best_id}")
         return(best_id)
 
 

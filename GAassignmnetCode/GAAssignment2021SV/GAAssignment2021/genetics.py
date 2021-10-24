@@ -197,7 +197,7 @@ class Population:
         winners = []
         for i in range(20):
             tournament = random.choices(scores, k=20)
-            winner = min(tournament, key=attrgetter('score'))
+            winner = min(tournament)
             winners.append(winner)
       
         parents1 = winners[:10]
@@ -213,7 +213,6 @@ class Population:
                 new_pop.append(baby)
         self.pop = new_pop 
         self.calcScore(self.item_list)
-        pdb.set_trace()
 
 
 if __name__ == "__main__":
@@ -221,6 +220,11 @@ if __name__ == "__main__":
     item_list = ItemList()
     item_list.setItems()
     test  = Population(rng, item_list)
-    pdb.set_trace()
     test.calcScore(rng)
-    test.breed()
+    for i in range(10):
+        test.breed()
+        print(f"mutations:{g.mutations}")
+        print(f"g.best_score{g.bestScore}")
+        print(f"g.bestid{g.best}")
+        pdb.set_trace()
+    

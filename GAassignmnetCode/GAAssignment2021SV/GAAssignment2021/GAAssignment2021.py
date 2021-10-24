@@ -84,9 +84,7 @@ def showStats():
 
 def run1Generation(p):
     global globalRand
-    gg = int(g.POPULATION / 2)
-    for i in range(0,gg):
-        p.breed()
+    p.breed()
     g.best = p.calcScore(items);
     g.generation = g.generation +1
    
@@ -104,7 +102,6 @@ def runAll():
 
 def run1Gen():
     global p
-    pdb.set_trace()
     run1Generation(p);
     showStats();
     showBest();

@@ -16,17 +16,6 @@ from operator import attrgetter
 from functools import total_ordering
 from pprint import pprint
 
-
-def rnd (rng, lo, hi):  
-    #if rng is a random the it returns a float between lo and hi , but never equalling Hi
-    retv = (hi - lo) * rng.random() + lo;
-    return retv
-
-def rndInt (rng, lo, hi):
-    # if rng is a random it returns a int between lo and hi, this is inclusive of lo and Hi val
-    retv = (hi - lo+0.99) * rng.random() + lo;
-    return int(retv)
-
 @dataclass
 class Gene(object):
     truck: int
@@ -37,7 +26,7 @@ class Gene(object):
 class Genome(object):
     # some genome data deletd here .. students to design
     
-    def __init__(self,rng, genes=[]):
+    def __init__(self, genes=[]):
         #note it populates the new genome with random numbers
         self.score=9999999      # score of this genome 
         self.generation=0  # counter to know which generation this came from
@@ -86,15 +75,11 @@ class Genome(object):
         new_list = copy(new_list.lst)
 
         new_genes = [Gene(pick_truck(), i) for i in new_list] 
-        new_genome = cls(rng, new_genes)
+        new_genome = cls(new_genes)
         score = new_genome.calcScore()
         
             
         return(new_genome)
-
-
-    
-
 
     def getTruck(self, truck):
         truck_genes = list(filter(lambda x: x.truck==truck, self.genes))
@@ -116,22 +101,16 @@ class Genome(object):
             size1 += gene.item.size
         
         diff_from_ideal1 = 19 - size1
-        # if diff_from_ideal1 < 0:
-        #     diff_from_ideal1 -= 100
 
         for gene in truck2:
             importance += importance_scores[gene.item.importance]
             size2 += gene.item.size
         diff_from_ideal2 = 19 - size2
-        # if diff_from_ideal2 < 0:
-        #     diff_from_ideal2 -= 100
 
         for gene in truck3:
             importance += importance_scores[gene.item.importance]
             size3 += gene.item.size
         diff_from_ideal3 = 19 - size3
-        # if diff_from_ideal2 < 0:
-        #     diff_from_ideal2 -= 100
 
         total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
         score = total_diff
@@ -151,18 +130,6 @@ class Population:
         self.rng = rng
         self.item_list = item_list
         self.pop = list(map(lambda x:x.random_genes(item_list), self.pop))
-
-    def idOfBest(self): # highest score
-        #global POPULATION
-        #retv = 0;
-        #best = pop[0].score;
-        #for i in range(1, g.POPULATION):
-        #    if (pop[i].score > best):
-        #        retv = i;
-        #        best = pop[i].score;
-        #return retv;
-        pass
-        
 
     def calcScore(self):
      
@@ -227,7 +194,6 @@ class Population:
         print(f"min(x):{min(x)}")
         print(f"min(self.pop):{min(self.pop)}")
         g.generation += 1
-        pdb.set_trace()
 
 
 if __name__ == "__main__":

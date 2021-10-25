@@ -14,6 +14,7 @@ import sys
 import time
 from operator import attrgetter
 from functools import total_ordering
+from pprint import pprint
 
 
 def rnd (rng, lo, hi):  
@@ -32,13 +33,13 @@ class Gene(object):
     item: Item 
 
 
-@total_ordering
+# @total_ordering
 class Genome(object):
     # some genome data deletd here .. students to design
     
     def __init__(self,rng, genes=[]):
         #note it populates the new genome with random numbers
-        self.score=0       # score of this genome 
+        self.score=9999999      # score of this genome 
         self.generation=0  # counter to know which generation this came from
         self.mutations=0   # counter to know how many mutations were in this genome
         self.genes = genes
@@ -53,7 +54,20 @@ class Genome(object):
     def __eq__(self, other):
         if not isinstance(other, type(self)): return NotImplemented
         return self.score == other.score
+    
+    def __le__(self, other):
+        if not isinstance(other, type(self)): return NotImplemented
+        return (self.score == other.score) or (self.score < other.score)
+    
+    
+    def __gt__(self, other):
+        if not isinstance(other, type(self)): return NotImplemented
+        return self.score > other.score
 
+    def __ge__(self, other):
+        if not isinstance(other, type(self)): return NotImplemented
+        return (self.score == other.score) or (self.score > other.score)
+    
     @classmethod                
     def random_genes(cls, rng):
         def pick_truck():
@@ -70,8 +84,13 @@ class Genome(object):
         new_list = ItemList()
         new_list.setItems()
         new_list = copy(new_list.lst)
+
         new_genes = [Gene(pick_truck(), i) for i in new_list] 
-        return(cls(rng, new_genes))
+        new_genome = cls(rng, new_genes)
+        score = new_genome.calcScore()
+        
+            
+        return(new_genome)
 
 
     
@@ -82,7 +101,7 @@ class Genome(object):
         return(truck_genes)
 
 
-    def calcScore(self, itemList): #ItemList lst
+    def calcScore(self): #ItemList lst
         # student code here   
         importance_scores = {3:1, 2:2, 1:3} 
         importance = 0
@@ -114,17 +133,13 @@ class Genome(object):
         # if diff_from_ideal2 < 0:
         #     diff_from_ideal2 -= 100
 
-
-
-
         total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
         # print(f"diff1:{diff_from_ideal1}, diff2:{diff_from_ideal2}, diff3:{diff_from_ideal3}")
         score = total_diff
-        if score == 0:
-            pdb.set_trace()
-        print(score)
+        # print(f"score:{score}")
         self.score = score
-        return(self.score)
+        print(f"self.score:{self.score}")
+        # return(self.score)
 
             
 
@@ -135,7 +150,7 @@ class Population:
         
     # pop=[]    # the genomes of the population
 
-    def __init__(self,rng, item_list):
+    def __init__(self, item_list):
         self.pop = [Genome(rng)]* g.POPULATION
         self.rng = rng
         self.item_list = item_list
@@ -153,16 +168,17 @@ class Population:
         pass
         
 
-    def calcScore(self, itemList):
-        for count, genome in enumerate(self.pop):
-            genome.calcScore(itemList)
+    def calcScore(self):
+     
+        for genome in self.pop:
+            genome.calcScore()
 
         best = min(self.pop)
         best_id = min(range(len(self.pop)), key=self.pop.__getitem__)
 
         g.bestScore = best.score
         g.best = best_id
-        print(f"best id:{best_id}, best_score:{best_id}")
+        print(f"best id:{best_id}, best_score:{best.score}")
         return(best_id)
 
 
@@ -174,58 +190,86 @@ class Population:
         baby = Genome(self.rng) 
         baby.genes = [0] * 30
         for i in range(30):
-            coin = rndInt(self.rng, 0, 1)
+            coin = random.randint(0, 1)
             if coin == 0:
                 baby.genes[i] = genome1.genes[i]
             elif coin == 1:
                 baby.genes[i] = genome2.genes[i]
-            does_mutation_happen = rndInt(self.rng, 1, 100) 
-            if does_mutation_happen <= g.MUTATIONPERCENT:
-                baby.genes[i].truck = rndInt(self.rng, 0, 3)
-                baby.mutations += 1
-                g.mutations += 1
+            does_mutation_happen = random.randint(1, 100) 
+            # if does_mutation_happen <= g.MUTATIONPERCENT:
+            #     baby.genes[i].truck = random.randint(0, 3)
+            #     baby.mutations += 1
+            #     g.mutations += 1
             # TO DO: change generation and mutations
         baby.generation += 1
+        baby.calcScore()
         return(baby)
 
 
     
     def breed(self):
         # Kill some breed from the rest 
-        self.calcScore(self.item_list)
-        scores = sorted(self.pop, key=lambda genome: genome.score)
+        # scores = sorted(self.pop)
+        x = copy(self.pop)
+        # test = sorted(x)
+        # test.sort()
+        # pdb.set_trace()
+        self.calcScore()
 
         winners = []
         for i in range(20):
-            tournament = random.choices(scores, k=20)
+            tournament = random.choices(self.pop, k=3)
             winner = min(tournament)
+            pdb.set_trace()
+            print(f"winner:{winner}")
             winners.append(winner)
-      
-        parents1 = winners[:10]
-        parents2 = winners[10:]
+
+        # top_half = self.pop[:50] 
+        
+
+
 
         new_pop = []
 
-        for i in range(10):
-            random.shuffle(parents1)
-            random.shuffle(parents2)
+        for i in range(8):
+            random.shuffle(winners)
+
+            parents1 = winners[:len(winners)//2]
+            parents2 = winners[len(winners)//2:]
             for i in range(10):
                 baby = self.crossover(parents1[i], parents2[i])
                 new_pop.append(baby)
-        self.pop = new_pop 
-        self.calcScore(self.item_list)
+        self.pop = winners + new_pop
+        self.calcScore()
+        print(f"g.best:{g.best}, g.bestScore:{g.bestScore}")
+        breakpoint()
+        # self.pop.sort()
+        # print(f"scores[0]:{self.pop[0]}")
+        # print(f"x[0]:{x[0]}")
+        # print(f"scores2[0]:{scores2[0]}")
+        # print(f"self.pop[0]:{self.pop[0]}")
+        g.generation += 1
 
 
 if __name__ == "__main__":
     rng = random.Random()
     item_list = ItemList()
     item_list.setItems()
-    test  = Population(rng, item_list)
-    test.calcScore(rng)
-    for i in range(10):
+    test = Population(item_list)
+    for i in range(200):
         test.breed()
         print(f"mutations:{g.mutations}")
-        print(f"g.best_score{g.bestScore}")
-        print(f"g.bestid{g.best}")
-        pdb.set_trace()
+        print(f"g.best_score {g.bestScore}")
+        print(f"g.bestid {g.best}")
+
+    # test = [Genome(rng) for i in range(10)]
+    # for i in test:
+    #     test.random_genes()
+
     
+
+    # for i in range(10):
+    #     test.calcScore()
+    #     print(f"test2.score:{test.score}")
+
+   

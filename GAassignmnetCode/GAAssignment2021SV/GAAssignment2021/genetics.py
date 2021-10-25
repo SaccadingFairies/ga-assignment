@@ -5,7 +5,7 @@ import math
 import time
 import random
 import pdb
-from copy import copy
+from copy import copy, deepcopy
 from Items import Item, ItemList
 import g
 from dataclasses import dataclass
@@ -134,12 +134,8 @@ class Genome(object):
         #     diff_from_ideal2 -= 100
 
         total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
-        # print(f"diff1:{diff_from_ideal1}, diff2:{diff_from_ideal2}, diff3:{diff_from_ideal3}")
         score = total_diff
-        # print(f"score:{score}")
         self.score = score
-        print(f"self.score:{self.score}")
-        # return(self.score)
 
             
 
@@ -192,15 +188,14 @@ class Population:
         for i in range(30):
             coin = random.randint(0, 1)
             if coin == 0:
-                baby.genes[i] = genome1.genes[i]
+                baby.genes[i] = deepcopy(genome1.genes[i])
             elif coin == 1:
-                baby.genes[i] = genome2.genes[i]
-            does_mutation_happen = random.randint(1, 100) 
-            # if does_mutation_happen <= g.MUTATIONPERCENT:
-            #     baby.genes[i].truck = random.randint(0, 3)
-            #     baby.mutations += 1
-            #     g.mutations += 1
-            # TO DO: change generation and mutations
+                baby.genes[i] = deepcopy(genome2.genes[i])
+        does_mutation_happen = random.randint(1, 100) 
+        if does_mutation_happen <= g.MUTATIONPERCENT:
+            baby.genes[random.randint(0,29)].truck = random.randint(0, 3)
+            baby.mutations += 1
+            g.mutations += 1
         baby.generation += 1
         baby.calcScore()
         return(baby)
@@ -209,46 +204,30 @@ class Population:
     
     def breed(self):
         # Kill some breed from the rest 
-        # scores = sorted(self.pop)
-        x = copy(self.pop)
-        # test = sorted(x)
-        # test.sort()
-        # pdb.set_trace()
+        x = deepcopy(self.pop) 
         self.calcScore()
 
-        winners = []
-        for i in range(20):
-            tournament = random.choices(self.pop, k=3)
-            winner = min(tournament)
-            pdb.set_trace()
-            print(f"winner:{winner}")
-            winners.append(winner)
-
-        # top_half = self.pop[:50] 
+        scores = sorted(copy(self.pop))
+        top_25 = len(scores) // 4
+        top_half = self.pop[:top_25] 
         
 
+        parents1 = top_half[:len(top_half)//2]
+        parents2 = top_half[len(top_half)//2:]
 
 
         new_pop = []
 
-        for i in range(8):
-            random.shuffle(winners)
-
-            parents1 = winners[:len(winners)//2]
-            parents2 = winners[len(winners)//2:]
-            for i in range(10):
-                baby = self.crossover(parents1[i], parents2[i])
+        for i in range(g.POPULATION):
+                baby = self.crossover(random.choice(parents1), random.choice(parents2))
                 new_pop.append(baby)
-        self.pop = winners + new_pop
+        self.pop = new_pop
+        self.pop[0] = scores[0] # Keeping best
         self.calcScore()
-        print(f"g.best:{g.best}, g.bestScore:{g.bestScore}")
-        breakpoint()
-        # self.pop.sort()
-        # print(f"scores[0]:{self.pop[0]}")
-        # print(f"x[0]:{x[0]}")
-        # print(f"scores2[0]:{scores2[0]}")
-        # print(f"self.pop[0]:{self.pop[0]}")
+        print(f"min(x):{min(x)}")
+        print(f"min(self.pop):{min(self.pop)}")
         g.generation += 1
+        pdb.set_trace()
 
 
 if __name__ == "__main__":

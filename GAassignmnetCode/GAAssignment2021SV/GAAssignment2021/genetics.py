@@ -22,6 +22,7 @@ class Gene(object):
     item: Item 
 
 
+
 # @total_ordering
 class Genome(object):
     # some genome data deletd here .. students to design
@@ -85,6 +86,16 @@ class Genome(object):
         truck_genes = list(filter(lambda x: x.truck==truck, self.genes))
         return(truck_genes)
 
+    def getTruckSizes(self):
+        truck_sizes = []
+        for i in range(1, 4):
+            truck_size = 0
+            truck = self.getTruck(i) 
+            for gene in truck:
+                truck_size += gene.item.size
+            truck_sizes.append(truck_size)
+        return(truck_sizes)
+        pdb.set_trace()
 
     def calcScore(self): #ItemList lst
         # student code here   
@@ -204,6 +215,7 @@ if __name__ == "__main__":
         print(f"mutations:{g.mutations}")
         print(f"g.best_score {g.bestScore}")
         print(f"g.bestid {g.best}")
+        test.pop[0].getTruckSizes()
 
     # test = [Genome(rng) for i in range(10)]
     # for i in test:

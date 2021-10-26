@@ -128,10 +128,11 @@ def showBest():
 
     #// students put your code in here ******************************     
     #//                                call addToTruck to update the display 
-    truck0 = best.getTruck(1)
+    truck0 = best.getTruck(0)
     truck1 = best.getTruck(1)
     truck2 = best.getTruck(2)
     truck3 = best.getTruck(3)
+
     t0 = ""
     for gene in truck0:
         item = gene.item

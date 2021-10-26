@@ -6,6 +6,7 @@ import time
 import random
 import pdb
 from copy import copy, deepcopy
+from typing import overload
 from Items import Item, ItemList
 import g
 from dataclasses import dataclass
@@ -110,18 +111,27 @@ class Genome(object):
         for gene in truck1:
             importance += importance_scores[gene.item.importance]
             size1 += gene.item.size
-        
+        overloaded_penalty = 4
+
         diff_from_ideal1 = 19 - size1
+        if diff_from_ideal1 < 0:
+            diff_from_ideal1 -= overloaded_penalty
 
         for gene in truck2:
             importance += importance_scores[gene.item.importance]
             size2 += gene.item.size
         diff_from_ideal2 = 19 - size2
+        if diff_from_ideal2 < 0:
+            diff_from_ideal2 -= overloaded_penalty
+
 
         for gene in truck3:
             importance += importance_scores[gene.item.importance]
             size3 += gene.item.size
         diff_from_ideal3 = 19 - size3
+        if diff_from_ideal3 < 0:
+            diff_from_ideal3 -= overloaded_penalty
+
 
         total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
         score = total_diff

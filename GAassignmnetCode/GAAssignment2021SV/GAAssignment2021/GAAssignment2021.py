@@ -70,8 +70,8 @@ def initialise():
 
     items = Items.ItemList()
     items.setItems()
-    p = genetics.Population(globalRand, items)
-    g.best = p.calcScore(items)
+    p = genetics.Population(items)
+    g.best = p.calcScore()
     showStats()
     showBest()
 
@@ -85,7 +85,7 @@ def showStats():
 def run1Generation(p):
     global globalRand
     p.breed()
-    g.best = p.calcScore(items);
+    g.best = p.calcScore();
     g.generation = g.generation +1
    
 

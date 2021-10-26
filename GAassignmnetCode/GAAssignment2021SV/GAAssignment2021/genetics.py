@@ -56,9 +56,9 @@ class Genome(object):
     def __ge__(self, other):
         if not isinstance(other, type(self)): return NotImplemented
         return (self.score == other.score) or (self.score > other.score)
-    
-    @classmethod                
-    def random_genes(cls, rng):
+   
+    @classmethod              
+    def random_genes(cls):
         def pick_truck():
             pick = random.randint(1, 100)
             if pick <= 70:
@@ -126,10 +126,9 @@ class Population:
     # pop=[]    # the genomes of the population
 
     def __init__(self, item_list):
-        self.pop = [Genome(rng)]* g.POPULATION
-        self.rng = rng
+        self.pop = [Genome()]* g.POPULATION
         self.item_list = item_list
-        self.pop = list(map(lambda x:x.random_genes(item_list), self.pop))
+        self.pop = list(map(lambda x:x.random_genes(), self.pop))
 
     def calcScore(self):
      
@@ -150,7 +149,7 @@ class Population:
          # update        g.best
          # update        g.bestScore 
     def crossover(self, genome1, genome2): 
-        baby = Genome(self.rng) 
+        baby = Genome() 
         baby.genes = [0] * 30
         for i in range(30):
             coin = random.randint(0, 1)
@@ -197,7 +196,6 @@ class Population:
 
 
 if __name__ == "__main__":
-    rng = random.Random()
     item_list = ItemList()
     item_list.setItems()
     test = Population(item_list)

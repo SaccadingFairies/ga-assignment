@@ -65,12 +65,8 @@ class Genome(object):
             pick = random.randint(1, 100)
             if pick <= 70:
                 return(0)
-            elif pick <=80:
-                return(1)
-            elif pick <=90:
-                return(2)
-            elif pick <= 100:
-                return(3)
+            else:
+                return(random.randint(1, 3))
 
         new_list = ItemList()
         new_list.setItems()
@@ -100,7 +96,7 @@ class Genome(object):
 
     def calcScore(self): #ItemList lst
         # student code here   
-        importance_scores = {3:1, 2:2, 1:3} 
+        importance_scores = {1:4, 2:2, 3:1} 
         importance = 0
         size1 = 0
         size2 = 0
@@ -108,10 +104,11 @@ class Genome(object):
         truck1 = self.getTruck(1)
         truck2 = self.getTruck(2)
         truck3 = self.getTruck(3)
+
+        overloaded_penalty = 20
         for gene in truck1:
             importance += importance_scores[gene.item.importance]
             size1 += gene.item.size
-        overloaded_penalty = 4
 
         diff_from_ideal1 = 19 - size1
         if diff_from_ideal1 < 0:
@@ -133,8 +130,7 @@ class Genome(object):
             diff_from_ideal3 -= overloaded_penalty
 
 
-        total_diff = abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
-        score = total_diff
+        score = importance - abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
         self.score = score
 
             
@@ -156,8 +152,8 @@ class Population:
         for genome in self.pop:
             genome.calcScore()
 
-        best = min(self.pop)
-        best_id = min(range(len(self.pop)), key=self.pop.__getitem__)
+        best = max(self.pop)
+        best_id = max(range(len(self.pop)), key=self.pop.__getitem__)
 
         g.bestScore = best.score
         g.best = best_id
@@ -194,7 +190,7 @@ class Population:
         x = deepcopy(self.pop) 
         self.calcScore()
 
-        scores = sorted(copy(self.pop))
+        scores = sorted(copy(self.pop), reverse=True)
         top_25 = len(scores) // 4
         top_half = self.pop[:top_25] 
         

@@ -96,8 +96,10 @@ class Genome(object):
 
     def calcScore(self): #ItemList lst
         # student code here   
-        importance_scores = {1:4, 2:2, 3:1} 
-        importance = 0
+        importance_scores = {1:3, 2:2, 3:1} 
+        importance1 = 0
+        importance2 = 0
+        importance3 = 0
         size1 = 0
         size2 = 0
         size3 = 0
@@ -105,32 +107,32 @@ class Genome(object):
         truck2 = self.getTruck(2)
         truck3 = self.getTruck(3)
 
-        overloaded_penalty = 20
+        # overloaded_penalty = 20
         for gene in truck1:
-            importance += importance_scores[gene.item.importance]
+            importance1 += importance_scores[gene.item.importance]
             size1 += gene.item.size
 
         diff_from_ideal1 = 19 - size1
         # if diff_from_ideal1 < 0:
-        #     diff_from_ideal1 =  (diff_from_ideal1 * 2) - overloaded_penalty
+        #     diff_from_ideal1 *=  overloaded_penalty
 
         for gene in truck2:
-            importance += importance_scores[gene.item.importance]
+            importance2 += importance_scores[gene.item.importance]
             size2 += gene.item.size
         diff_from_ideal2 = 19 - size2
         # if diff_from_ideal2 < 0:
-        #     diff_from_ideal2 -= (diff_from_ideal2 * 2) - overloaded_penalty
+        #     diff_from_ideal2 *=  overloaded_penalty 
 
 
         for gene in truck3:
-            importance += importance_scores[gene.item.importance]
+            importance3 += importance_scores[gene.item.importance]
             size3 += gene.item.size
         diff_from_ideal3 = 19 - size3
         # if diff_from_ideal3 < 0:
-        #     diff_from_ideal3 -= (diff_from_ideal3 * 2) - overloaded_penalty
+        #     diff_from_ideal3 *= overloaded_penalty
 
 
-        score = importance - abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
+        score = (importance1 - abs(diff_from_ideal1)) + (importance2 - abs(diff_from_ideal2)) + (importance3 - abs(diff_from_ideal3))
         self.score = score
 
             
@@ -209,13 +211,14 @@ class Population:
                     if len(overloaded_trucks) == 0:
                         break
                     else:
+                        print('culling truck')
                         continue
                 new_pop.append(baby)
         self.pop = new_pop
         self.pop[0] = scores[0] # Keeping best
         self.calcScore()
-        print(f"min(x):{min(x)}")
-        print(f"min(self.pop):{min(self.pop)}")
+        print(f"max(x):{max(x)}")
+        print(f"max(self.pop):{max(self.pop)}")
         g.generation += 1
 
 

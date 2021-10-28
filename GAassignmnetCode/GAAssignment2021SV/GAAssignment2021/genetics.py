@@ -111,23 +111,23 @@ class Genome(object):
             size1 += gene.item.size
 
         diff_from_ideal1 = 19 - size1
-        if diff_from_ideal1 < 0:
-            diff_from_ideal1 -= overloaded_penalty
+        # if diff_from_ideal1 < 0:
+        #     diff_from_ideal1 =  (diff_from_ideal1 * 2) - overloaded_penalty
 
         for gene in truck2:
             importance += importance_scores[gene.item.importance]
             size2 += gene.item.size
         diff_from_ideal2 = 19 - size2
-        if diff_from_ideal2 < 0:
-            diff_from_ideal2 -= overloaded_penalty
+        # if diff_from_ideal2 < 0:
+        #     diff_from_ideal2 -= (diff_from_ideal2 * 2) - overloaded_penalty
 
 
         for gene in truck3:
             importance += importance_scores[gene.item.importance]
             size3 += gene.item.size
         diff_from_ideal3 = 19 - size3
-        if diff_from_ideal3 < 0:
-            diff_from_ideal3 -= overloaded_penalty
+        # if diff_from_ideal3 < 0:
+        #     diff_from_ideal3 -= (diff_from_ideal3 * 2) - overloaded_penalty
 
 
         score = importance - abs(diff_from_ideal1) + abs(diff_from_ideal2) + abs(diff_from_ideal3)
@@ -202,7 +202,14 @@ class Population:
         new_pop = []
 
         for i in range(g.POPULATION):
-                baby = self.crossover(random.choice(parents1), random.choice(parents2))
+                while True:
+                    baby = self.crossover(random.choice(parents1), random.choice(parents2))
+                    truck_sizes = baby.getTruckSizes()
+                    overloaded_trucks = list(filter(lambda truck: truck > 19, truck_sizes))
+                    if len(overloaded_trucks) == 0:
+                        break
+                    else:
+                        continue
                 new_pop.append(baby)
         self.pop = new_pop
         self.pop[0] = scores[0] # Keeping best

@@ -97,6 +97,8 @@ class Genome(object):
     def calcScore(self): #ItemList lst
         # student code here   
         importance_weights = {1:3, 2:2, 3:1} 
+        petrol_count = 0
+        hospital_count = 0
        
         truck1 = self.getTruck(1)
         truck2 = self.getTruck(2)
@@ -110,14 +112,33 @@ class Genome(object):
             importance = 0
             size = 0
             for gene in truck:
+                name = gene.item.name
                 importance += importance_weights[gene.item.importance]
                 size += gene.item.size
-            importance_scores.append(importance)
 
+                # give first petrol added a little boost
+                if name[:6] == "Petrol":
+                    petrol_count += 1
+                    if petrol_count == 1:
+                        importance += 5
+
+                #only give points for hospital items if both are in a truck
+                if name[:8] == "Hospital":
+                    hospital_count += 1
+                    if hospital_count == 1: 
+                        importance -= 3
+                        continue
+                    elif hospital_count == 2:
+                        importance += 6 
+
+                
+
+            importance_scores.append(importance)
             diff_from_ideal = 19 - size
             if diff_from_ideal < 0:
                 diff_from_ideal *=  overloaded_penalty
             diffs_from_ideal.append(diff_from_ideal)
+
 
         score = sum([importance_scores[i] - abs(diffs_from_ideal[i]) for i in range(3)])
         self.score = score

@@ -96,43 +96,30 @@ class Genome(object):
 
     def calcScore(self): #ItemList lst
         # student code here   
-        importance_scores = {1:3, 2:2, 3:1} 
-        importance1 = 0
-        importance2 = 0
-        importance3 = 0
-        size1 = 0
-        size2 = 0
-        size3 = 0
+        importance_weights = {1:3, 2:2, 3:1} 
+       
         truck1 = self.getTruck(1)
         truck2 = self.getTruck(2)
         truck3 = self.getTruck(3)
 
-        overloaded_penalty = 10
-        for gene in truck1:
-            importance1 += importance_scores[gene.item.importance]
-            size1 += gene.item.size
+        overloaded_penalty = 5
+        diffs_from_ideal = []
+        importance_scores = []
+        for i in range(1,4):
+            truck = self.getTruck(i)
+            importance = 0
+            size = 0
+            for gene in truck:
+                importance += importance_weights[gene.item.importance]
+                size += gene.item.size
+            importance_scores.append(importance)
 
-        diff_from_ideal1 = 19 - size1
-        if diff_from_ideal1 < 0:
-            diff_from_ideal1 *=  overloaded_penalty
+            diff_from_ideal = 19 - size
+            if diff_from_ideal < 0:
+                diff_from_ideal *=  overloaded_penalty
+            diffs_from_ideal.append(diff_from_ideal)
 
-        for gene in truck2:
-            importance2 += importance_scores[gene.item.importance]
-            size2 += gene.item.size
-        diff_from_ideal2 = 19 - size2
-        if diff_from_ideal2 < 0:
-            diff_from_ideal2 *=  overloaded_penalty 
-
-
-        for gene in truck3:
-            importance3 += importance_scores[gene.item.importance]
-            size3 += gene.item.size
-        diff_from_ideal3 = 19 - size3
-        if diff_from_ideal3 < 0:
-            diff_from_ideal3 *= overloaded_penalty
-
-
-        score = (importance1 - abs(diff_from_ideal1)) + (importance2 - abs(diff_from_ideal2)) + (importance3 - abs(diff_from_ideal3))
+        score = sum([importance_scores[i] - abs(diffs_from_ideal[i]) for i in range(3)])
         self.score = score
 
             

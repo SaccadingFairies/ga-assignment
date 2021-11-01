@@ -17,6 +17,7 @@ text_box1=0
 text_box2=0
 text_box3=0
 text_box4=0
+text_boxR0=0
 text_boxR1=0
 text_boxR2=0
 text_boxR3=0
@@ -55,7 +56,7 @@ windowY=600
 
 
 def initialise():
-    global text_boxR1, text_boxR2, text_boxR3, text_boxR4, seed_value
+    global text_boxR0, text_boxR1, text_boxR2, text_boxR3, text_boxR4, seed_value
     global p, items 
     global t0, t1, t2, t3, s0, s1, s2, s3
 
@@ -66,7 +67,8 @@ def initialise():
         random.seed()
     g.POPULATION = int(text_boxR2.get("1.0", tk.END))
     g.MUTATIONPERCENT = float(text_boxR4.get("1.0", tk.END))
-    g.maxGeneration = int(text_boxR3.get("1.0", tk.END));  
+    g.maxGeneration = int(text_boxR3.get("1.0", tk.END))  
+    g.overloaded_penalty = int(text_boxR0.get("1.0", tk.END))
     
     g.generation = 0
     g.mutations= 0
@@ -198,7 +200,7 @@ def showBest():
 
 
 def main():
-    global window, text_boxR1, text_boxR2, text_boxR3, text_boxR4, text_boxS1, greeting5, text_boxS2, text_boxS3
+    global window, text_boxR0, text_boxR1, text_boxR2, text_boxR3, text_boxR4, text_boxS1, greeting5, text_boxS2, text_boxS3
     global text_box1, text_box2, text_box3, text_box4, greetingT1, greetingT2, greetingT3, delayBox, seed_check, seed_value
 
     window=tk.Tk()
@@ -242,6 +244,8 @@ def main():
 
     baseY2=200
     # labels for Random seed, population, generations, Mutation percent
+    overloaded_label = tk.Label(window, text="Over Penalty", bg="cyan", fg="black")
+    overloaded_label.place(x=5, y=baseY2-1*25, width=100, height=20)
     greeting1 = tk.Label(window, text="Random Seed", bg="cyan", fg="black")
     greeting1.place(x = 5, y = baseY2 , width=100, height=20) 
     greeting2 = tk.Label(window, text="Population", bg="cyan", fg="black")
@@ -252,12 +256,15 @@ def main():
     greeting4.place(x = 5, y = baseY2+3*25 , width=100, height=20) 
 
     # Input boxes for Random seed, population, generations, Mutation percent
+    text_boxR0 = tk.Text(window, height=1, width=10)
+    text_boxR0.place(x=110, y=baseY2-1*25)
+    text_boxR0.insert(tk.END, str(g.overloaded_penalty))
     text_boxR1 = tk.Text(window, height=1, width=10) #Random Seed
     text_boxR1.place(x=110, y=baseY2)
+    text_boxR1.insert(tk.END, "101") #tk.END
     seed_value = tk.StringVar(window)
     seed_check = tk.Checkbutton(window, variable=seed_value, onvalue="yes", offvalue="no")
     seed_check.place(x=190, y = baseY2)
-    text_boxR1.insert(tk.END, "101") #tk.END
     text_boxR2 = tk.Text(window, height=1, width=10) #Population
     text_boxR2.place(x=110, y=baseY2+1*25) 
     text_boxR2.insert(tk.END, str(g.POPULATION)) 

@@ -104,7 +104,6 @@ class Genome(object):
         truck2 = self.getTruck(2)
         truck3 = self.getTruck(3)
 
-        overloaded_penalty = 8 
         diffs_from_ideal = []
         importance_scores = []
         for i in range(1,4):
@@ -136,7 +135,7 @@ class Genome(object):
             importance_scores.append(importance)
             diff_from_ideal = 19 - size
             if diff_from_ideal < 0:
-                diff_from_ideal *=  overloaded_penalty
+                diff_from_ideal -=  g.overloaded_penalty
             diffs_from_ideal.append(diff_from_ideal)
 
 

@@ -15,3 +15,4 @@ marker = -99999; # marker used by me to indicate a special condition (i dont thi
 mutations = 0; # number of mutations
 best = 0; # the nunber in the Population of the best individual 
 bestScore = -99991 # the score of the best individual
+overloaded_penalty=8

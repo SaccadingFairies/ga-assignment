@@ -52,14 +52,13 @@ window=0
 windowX=800
 windowY=600
 
-globalRand=random.Random() # use  globalRand.random
 
 def initialise():
     global globalRand, text_boxR1, text_boxR2, text_boxR3, text_boxR4
     global p, items 
     global t0, t1, t2, t3, s0, s1, s2, s3
 
-    globalRand.seed(int(text_boxR1.get("1.0", tk.END)))
+    # random.seed(int(text_boxR1.get("1.0", tk.END)))
     g.POPULATION = int(text_boxR2.get("1.0", tk.END))
     g.MUTATIONPERCENT = float(text_boxR4.get("1.0", tk.END))
     g.maxGeneration = int(text_boxR3.get("1.0", tk.END));  

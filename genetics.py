@@ -104,7 +104,7 @@ class Genome(object):
         truck2 = self.getTruck(2)
         truck3 = self.getTruck(3)
 
-        overloaded_penalty = 5
+        overloaded_penalty = 20
         diffs_from_ideal = []
         importance_scores = []
         for i in range(1,4):
@@ -213,7 +213,7 @@ class Population:
             new_pop.append(baby)
 
         self.pop = new_pop
-        self.pop[0] = scores[0] # Keeping best
+        # self.pop[0] = scores[0] # Keeping best
         self.calcScore()
         print(f"max(x):{max(x)}")
         print(f"max(self.pop):{max(self.pop)}")

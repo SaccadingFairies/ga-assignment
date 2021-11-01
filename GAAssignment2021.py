@@ -29,6 +29,7 @@ greetingT1=0
 greetingT2=0
 greetingT3=0
 delayBox=0
+seed_value = 0
 #Checkbutton1=tk.IntVar()   
 
 t0 = "";
@@ -54,11 +55,15 @@ windowY=600
 
 
 def initialise():
-    global globalRand, text_boxR1, text_boxR2, text_boxR3, text_boxR4
+    global text_boxR1, text_boxR2, text_boxR3, text_boxR4, seed_value
     global p, items 
     global t0, t1, t2, t3, s0, s1, s2, s3
 
-    # random.seed(int(text_boxR1.get("1.0", tk.END)))
+    use_seed = seed_value.get() 
+    if use_seed == "yes":
+        random.seed(int(text_boxR1.get("1.0", tk.END)))
+    else:
+        random.seed()
     g.POPULATION = int(text_boxR2.get("1.0", tk.END))
     g.MUTATIONPERCENT = float(text_boxR4.get("1.0", tk.END))
     g.maxGeneration = int(text_boxR3.get("1.0", tk.END));  
@@ -194,7 +199,7 @@ def showBest():
 
 def main():
     global window, text_boxR1, text_boxR2, text_boxR3, text_boxR4, text_boxS1, greeting5, text_boxS2, text_boxS3
-    global text_box1, text_box2, text_box3, text_box4, greetingT1, greetingT2, greetingT3, delayBox, Checkbutton1
+    global text_box1, text_box2, text_box3, text_box4, greetingT1, greetingT2, greetingT3, delayBox, seed_check, seed_value
 
     window=tk.Tk()
 
@@ -249,6 +254,9 @@ def main():
     # Input boxes for Random seed, population, generations, Mutation percent
     text_boxR1 = tk.Text(window, height=1, width=10) #Random Seed
     text_boxR1.place(x=110, y=baseY2)
+    seed_value = tk.StringVar(window)
+    seed_check = tk.Checkbutton(window, variable=seed_value, onvalue="yes", offvalue="no")
+    seed_check.place(x=190, y = baseY2)
     text_boxR1.insert(tk.END, "101") #tk.END
     text_boxR2 = tk.Text(window, height=1, width=10) #Population
     text_boxR2.place(x=110, y=baseY2+1*25) 

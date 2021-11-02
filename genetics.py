@@ -125,10 +125,10 @@ class Genome(object):
                 if name[:8] == "Hospital":
                     hospital_count += 1
                     if hospital_count == 1: 
-                        importance -= 3
+                        importance -= 1
                         continue
                     elif hospital_count == 2:
-                        importance += 6 
+                        importance += 8 
 
                 
 
